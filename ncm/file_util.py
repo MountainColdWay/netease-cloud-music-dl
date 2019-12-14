@@ -12,10 +12,10 @@ def resize_img(file_path, max_size=(640, 640), quality=90):
         print('Can\'t open image:', file_path)
         return
 
+    img = img.convert('RGB')
+
     if img.size[0] > max_size[0] or img.size[1] > max_size[1]:
         img.thumbnail(max_size, Image.ANTIALIAS)
-        if img.format == 'PNG':
-            img = img.convert('RGB')
         img.save(file_path, quality=quality)
 
 
@@ -45,32 +45,32 @@ def add_metadata_to_song(file_path, cover_path, song):
         id3.delall('APIC')
     # add album cover
     id3.add(
-        APIC(
-            encoding=0,         # 3 is for UTF8, but here we use 0 (LATIN1) for 163, orz~~~
-            mime='image/jpeg',  # image/jpeg or image/png
-            type=3,             # 3 is for the cover(front) image
-            data=open(cover_path, 'rb').read()
-        )
-    )
+            APIC(
+                encoding=0,         # 3 is for UTF8, but here we use 0 (LATIN1) for 163, orz~~~
+                mime='image/jpeg',  # image/jpeg or image/png
+                type=3,             # 3 is for the cover(front) image
+                data=open(cover_path, 'rb').read()
+                )
+            )
     # add artist name
     id3.add(
-        TPE1(
-            encoding=3,
-            text=song['artists'][0]['name']
-        )
-    )
+            TPE1(
+                encoding=3,
+                text=song['artists'][0]['name']
+                )
+            )
     # add song name
     id3.add(
-        TIT2(
-            encoding=3,
-            text=song['name']
-        )
-    )
+            TIT2(
+                encoding=3,
+                text=song['name']
+                )
+            )
     # add album name
     id3.add(
-        TALB(
-            encoding=3,
-            text=song['album']['name']
-        )
-    )
+            TALB(
+                encoding=3,
+                text=song['album']['name']
+                )
+            )
     id3.save(v2_version=3)
